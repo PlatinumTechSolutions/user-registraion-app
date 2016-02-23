@@ -5,4 +5,4 @@ before_script:
     - cp app/config/parameters.yml.travis app/config/parameters.yml
     - composer install
 script:
-    - bin/phpunit --strict
+    - bin/phpunit
