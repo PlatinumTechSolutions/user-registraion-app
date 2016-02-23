@@ -1,0 +1,5 @@
+pts_user_registration:
+    resource: "@PTSUserRegistrationBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
