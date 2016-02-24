@@ -3,15 +3,37 @@
 namespace PTS\UserRegistrationBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use PTS\UserRegistrationBundle\Controller\DefaultController;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    /**
+     * @test
+     */
+    public function indexAction()
     {
-        $client = static::createClient();
+        $request  = $this->getBlankMock(Request::class);
+        $response = $this->getBlankMock(Response::class);
 
-        $crawler = $client->request('GET', '/');
+        $controller = $this->getMockBuilder(DefaultController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['render'])
+            ->getMock();
 
-        $this->assertContains('Hello World', $client->getResponse()->getContent());
+        $controller->expects(self::once())
+            ->method('render')
+            ->with(self::equalTo('PTSUserRegistrationBundle:Default:index.html.twig'))
+            ->will(self::returnValue($response));
+
+        self::assertSame($response, $controller->indexAction($request));
+    }
+
+    // utilities
+
+    public function getBlankMock($namespace)
+    {
+        return $this->getMockBuilder($namespace)->disableOriginalConstructor()->getMock();
     }
 }

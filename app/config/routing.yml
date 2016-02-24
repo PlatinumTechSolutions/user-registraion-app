@@ -3,3 +3,10 @@ pts_user_registration:
     type:     annotation
     prefix:   /
 
+# basic routes
+
+logout:
+    path: /logout
+
+homepage:
+    path: /
