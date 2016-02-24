@@ -5,7 +5,7 @@
 body, html {
     height: 100%;
     background-repeat: no-repeat;
-    background: #CEC;
+    background-color: #DDEEDD;
 }
 
 .card-container.card {
@@ -77,9 +77,9 @@ body, html {
 }
 
 .form-signin #inputEmail,
-.form-signin #inputEmail2,
-.form-signin #inputPassword,
-.form-signin #inputPassword2 {
+.form-signin #inputFirstName,
+.form-signin #inputLastName,
+.form-signin #inputPassword {
     direction: ltr;
     height: 44px;
     font-size: 16px;

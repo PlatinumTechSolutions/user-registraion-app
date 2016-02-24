@@ -11,11 +11,15 @@
             {% endfor %}
 
             <form class="form-signin" method="POST" action="#">
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                <input type="email" id="inputEmail2" class="form-control" placeholder="Confirm Email address" required autofocus>
+                <input type="text" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus>
+                <input type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email" required>
                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                <input type="password" id="inputPassword2" class="form-control" placeholder="Confirm Password" required>
 
+                Password Strength:
+                <div class="progress">
+                    <div id="complexity-bar" class="progress-bar" role="progressbar">0%</div>
+                </div>
 
                 <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Register</button>
             </form>
@@ -27,4 +31,23 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript" src="/js/jquery.complexify.min.js"></script>
+<script type="text/javascript">
+
+(function($) {
+    $('#inputPassword').complexify({}, function (valid, complexity) {
+        var progressBar = $('#complexity-bar');
+
+        progressBar.toggleClass('progress-bar-success', valid);
+        progressBar.toggleClass('progress-bar-danger', !valid);
+        progressBar.css({'width': complexity + '%'});
+        progressBar.text(Math.round(complexity) + '%');
+    });
+})(jQuery);
+
+</script>
 {% endblock %}
