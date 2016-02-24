@@ -1,1 +1,36 @@
 security:
+    encoders:
+        PTS\UserRegistrationBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 12
+
+    providers:
+        in_memory:
+            memory: ~
+
+        our_db_provider:
+            entity:
+                class: PTSUserRegistrationBundle:User
+                property: username
+    firewalls:
+        default:
+            anonymous: ~
+            http_basic: ~
+            form_login:
+                login_path: /login
+                check_path: /login_check
+            provider: our_db_provider
+            logout:
+                path:   /logout
+                target: /
+
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+
+    access_control:
+        - { path: ^/login,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register,         roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/,                 roles: ROLE_USER }
