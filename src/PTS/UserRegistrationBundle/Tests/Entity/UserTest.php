@@ -1,6 +1,6 @@
 <?php
 
-namespace PTS\UserRegistrationBundle\Entity\Tests;
+namespace PTS\UserRegistrationBundle\Tests\Entity;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
