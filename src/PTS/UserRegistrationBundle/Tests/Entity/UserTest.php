@@ -18,6 +18,8 @@ class UserTest extends WebTestCase
         self::assertEquals(null, $entity->getId());
         self::assertEquals(null, $entity->getUsername());
         self::assertEquals(null, $entity->getPassword());
+        self::assertEquals(null, $entity->getFirstName());
+        self::assertEquals(null, $entity->getLastName());
         self::assertEquals(null, $entity->getSalt());
 
         // advanced user interface (not in use at the moment)
@@ -78,6 +80,8 @@ class UserTest extends WebTestCase
         return [
             ['username', uniqid()],
             ['password', uniqid()],
+            ['firstName', uniqid()],
+            ['lastName', uniqid()],
         ];
     }
 }
