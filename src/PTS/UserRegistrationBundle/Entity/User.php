@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ORM\Table(name="auth_user")
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="UserRepository")
  */
 class User implements AdvancedUserInterface, \Serializable

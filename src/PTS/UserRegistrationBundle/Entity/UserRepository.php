@@ -10,4 +10,9 @@ namespace PTS\UserRegistrationBundle\Entity;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function newUser()
+    {
+        return new User();
+    }
+
 }
