@@ -30,6 +30,16 @@ class User implements AdvancedUserInterface, \Serializable
     private $password;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $first_name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $last_name;
+
+    /**
      * Get id
      *
      * @return integer
