@@ -280,8 +280,20 @@ class CreateUserCommandTest extends WebTestCase
 
         $user = $this->getBlankMock(User::class);
 
-        $user->expects(self::once())->method('setUsername')->with($username);
-        $user->expects(self::once())->method('setPassword')->with($encPassword);
+        $user->expects(self::once())
+            ->method('setUsername')
+            ->with($username)
+            ->will(self::returnValue($user));
+
+        $user->expects(self::once())
+            ->method('setPassword')
+            ->with($encPassword)
+            ->will(self::returnValue($user));
+
+        $user->expects(self::once())
+            ->method('setAdminStatus')
+            ->with(true)
+            ->will(self::returnValue($user));
 
         $userRepository = $this->getMockBuilder(UserRepository::class)
             ->disableOriginalConstructor()

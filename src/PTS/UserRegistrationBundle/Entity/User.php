@@ -40,6 +40,23 @@ class User implements AdvancedUserInterface, \Serializable
     private $last_name;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $admin_status;
+
+    public function __construct()
+    {
+        // a couple of default for new users
+        $this->enabled      = true;
+        $this->admin_status = false;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -138,7 +155,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function isEnabled()
     {
-        return true;
+        return (bool) $this->enabled;
     }
 
     /** @see \Serializable::serialize() */
@@ -166,7 +183,15 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        $roles = [];
+
+        if ($this->getAdminStatus()) {
+            $roles[] = 'ROLE_ADMIN';
+        } else {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return $roles;
     }
 
     /**
@@ -215,5 +240,53 @@ class User implements AdvancedUserInterface, \Serializable
     public function getLastName()
     {
         return $this->last_name;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     *
+     * @return User
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (bool) $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return (bool) $this->enabled;
+    }
+
+    /**
+     * Set adminStatus
+     *
+     * @param boolean $adminStatus
+     *
+     * @return User
+     */
+    public function setAdminStatus($adminStatus)
+    {
+        $this->admin_status = (bool) $adminStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get adminStatus
+     *
+     * @return boolean
+     */
+    public function getAdminStatus()
+    {
+        return (bool) $this->admin_status;
     }
 }

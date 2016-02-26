@@ -22,6 +22,13 @@ class UserTest extends WebTestCase
         self::assertEquals(null, $entity->getLastName());
         self::assertEquals(null, $entity->getSalt());
 
+        // booleans
+        self::assertTrue($entity->getEnabled());
+        self::assertFalse($entity->getAdminStatus());
+
+        // arrays
+        self::assertEquals(['ROLE_USER'], $entity->getRoles());
+
         // advanced user interface (not in use at the moment)
 
         self::assertTrue($entity->eraseCredentials());
@@ -82,6 +89,9 @@ class UserTest extends WebTestCase
             ['password', uniqid()],
             ['firstName', uniqid()],
             ['lastName', uniqid()],
+            ['lastName', uniqid()],
+            ['enabled',     true],
+            ['adminStatus', true],
         ];
     }
 }
