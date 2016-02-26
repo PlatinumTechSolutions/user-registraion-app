@@ -8,8 +8,9 @@
   $.fn.extend({
     complexify: function(options, callback) {
 
-      var MIN_COMPLEXITY = 49; // 12 chars with Upper, Lower and Number
+      var MIN_COMPLEXITY = 49;  //  12 chars with Upper, Lower and Number
       var MAX_COMPLEXITY = 120; //  25 chars, all charsets
+
       var CHARSETS = [
         // Commonly Used
         ////////////////////
