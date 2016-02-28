@@ -5,6 +5,7 @@ namespace PTS\UserRegistrationBundle\Tests\Entity;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use PTS\UserRegistrationBundle\Entity\User;
+use PTS\UserRegistrationBundle\Entity\UserHash;
 
 class UserTest extends WebTestCase
 {
@@ -28,6 +29,9 @@ class UserTest extends WebTestCase
 
         // arrays
         self::assertEquals(['ROLE_USER'], $entity->getRoles());
+
+        // Array Collections
+        self::assertEquals(new ArrayCollection(), $entity->getUserHashes());
 
         // advanced user interface (not in use at the moment)
 
@@ -78,6 +82,46 @@ class UserTest extends WebTestCase
         self::assertEquals($user->getId(),       12345);
         self::assertEquals($user->getUsername(), 'username');
         self::assertEquals($user->getPassword(), 'password');
+    }
+
+    /**
+     * @test
+     */
+    public function adminRole()
+    {
+        $user = new User();
+
+        self::assertEquals(['ROLE_USER'], $user->getRoles());
+
+        $user->setAdminStatus(true);
+
+        self::assertEquals(['ROLE_ADMIN'], $user->getRoles());
+    }
+
+    /**
+     * @test
+     */
+    public function userHashes()
+    {
+        $user = new User();
+
+        $userHash = $repository = $this->getMockBuilder(UserHash::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setUser'])
+            ->getMock();
+
+        $userHash->expects(self::once())->method('setUser')->with(self::equalTo($user));
+
+        self::assertEquals($user, $user->addUserHash($userHash));
+
+        $userHashes = new ArrayCollection();
+        $userHashes[] = $userHash;
+
+        self::assertEquals($userHashes, $user->getUserHashes());
+
+        $user->removeUserHash($userHash);
+
+        self::assertEquals(new ArrayCollection(), $user->getUserHashes());
     }
 
     // data providers

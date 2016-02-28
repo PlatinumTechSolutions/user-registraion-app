@@ -49,11 +49,17 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $admin_status;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserHash", mappedBy="user")
+     */
+    private $userHashes;
+
     public function __construct()
     {
         // a couple of default for new users
         $this->enabled      = true;
         $this->admin_status = false;
+        $this->userHashes   = new ArrayCollection();
     }
 
     /**
@@ -288,5 +294,40 @@ class User implements AdvancedUserInterface, \Serializable
     public function getAdminStatus()
     {
         return (bool) $this->admin_status;
+    }
+
+    /**
+     * Add userHash
+     *
+     * @param UserHash $userHash
+     *
+     * @return User
+     */
+    public function addUserHash(UserHash $userHash)
+    {
+        $this->userHashes[] = $userHash;
+        $userHash->setUser($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove userHash
+     *
+     * @param UserHash $userHash
+     */
+    public function removeUserHash(UserHash $userHash)
+    {
+        $this->userHashes->removeElement($userHash);
+    }
+
+    /**
+     * Get userHashes
+     *
+     * @return Collection
+     */
+    public function getUserHashes()
+    {
+        return $this->userHashes;
     }
 }
