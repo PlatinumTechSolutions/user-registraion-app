@@ -129,11 +129,14 @@ class UserTest extends WebTestCase
     public function mutatorValues()
     {
         return [
-            ['username', uniqid()],
-            ['password', uniqid()],
+            ['username',  uniqid()],
+            ['password',  uniqid()],
             ['firstName', uniqid()],
-            ['lastName', uniqid()],
-            ['lastName', uniqid()],
+            ['lastName',  uniqid()],
+            ['lastName',  uniqid()],
+
+            ['email', sprintf('%s@%s.com', uniqid(), uniqid())],
+
             ['enabled',     true],
             ['adminStatus', true],
         ];

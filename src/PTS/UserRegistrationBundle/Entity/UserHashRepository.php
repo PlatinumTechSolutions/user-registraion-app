@@ -2,6 +2,8 @@
 
 namespace PTS\UserRegistrationBundle\Entity;
 
+use PTS\UserRegistrationBundle\Util;
+
 /**
  * UserHashRepository
  *
@@ -13,5 +15,13 @@ class UserHashRepository extends \Doctrine\ORM\EntityRepository
     public function newUserHash()
     {
         return new UserHash();
+    }
+
+    /**
+     * @return string
+     */
+    public function generateNewValue()
+    {
+        return sprintf('%s-%s', Util::uuidv4(), Util::uuidv4());
     }
 }

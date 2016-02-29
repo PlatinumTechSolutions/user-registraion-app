@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PTS\UserRegistrationBundle\Exception\ValidationException;
 
 /**
- * @ORM\Table(name="UserHash")
+ * @ORM\Table(name="user_hash")
  * @ORM\Entity(repositoryClass="UserHashRepository")
  */
 class UserHash

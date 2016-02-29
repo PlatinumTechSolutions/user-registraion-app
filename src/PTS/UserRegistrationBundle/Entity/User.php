@@ -40,6 +40,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $last_name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $enabled;
@@ -246,6 +251,30 @@ class User implements AdvancedUserInterface, \Serializable
     public function getLastName()
     {
         return $this->last_name;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
