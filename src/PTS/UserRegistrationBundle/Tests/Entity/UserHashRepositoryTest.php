@@ -21,4 +21,19 @@ class UserHashRepositoryTest extends WebTestCase
 
         self::assertInstanceOf(UserHash::class, $repository->newUserHash());
     }
+
+    /**
+     * @test
+     */
+    public function generateNewValue()
+    {
+        $repository = $this->getMockBuilder(UserHashRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $value = $repository->generateNewValue();
+
+        self::assertEquals(73, strlen($value));
+    }
 }

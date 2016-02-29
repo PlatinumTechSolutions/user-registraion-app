@@ -254,6 +254,30 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
      * Set enabled
      *
      * @param boolean $enabled
@@ -334,29 +358,5 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUserHashes()
     {
         return $this->userHashes;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 }
