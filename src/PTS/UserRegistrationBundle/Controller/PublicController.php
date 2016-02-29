@@ -106,15 +106,14 @@ class PublicController extends Controller
      */
     public function generateUserHash(User $user, $type)
     {
+        $repository = $this->getRepository(UserHash::class);
+
+        $userHash = $repository->newUserHash()
+            ->setUser($user)
+            ->setType($type)
+            ->setValue($repository->generateNewValue());
+
         $entityManager = $this->getDoctrine()->getManager();
-
-        $value = $this->getRepository(UserHash::class)->generateNewValue();
-
-        $userHash = $this->getRepository(UserHash::class)->newUserHash();
-        $userHash->setUser($user);
-        $userHash->setType($type);
-        $userHash->setValue($value);
-
         $entityManager->persist($userHash);
         $entityManager->flush();
 
