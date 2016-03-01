@@ -11,14 +11,43 @@
             {% endfor %}
 
             <form class="form-signin" method="POST" action="#">
-                <input type="text" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus />
-                <input type="text" id="inputLastName" class="form-control" placeholder="Last Name" required />
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email" required />
+                <input name="_first_name"
+                    type="text"
+                    id="inputFirstName"
+                    class="form-control"
+                    placeholder="First Name"
+                    value="{{first_name}}"
+                    required
+                    autofocus />
+                <input name="_last_name"
+                    type="text"
+                    id="inputLastName"
+                    class="form-control"
+                    placeholder="Last Name"
+                    value="{{ last_name }}"
+                    required />
+                <input name="_email"
+                    type="email"
+                    id="inputEmail"
+                    class="form-control"
+                    placeholder="Email"
+                    value="{{ email }}"
+                    required />
 
                 <div id="password-inputs" class="form-group has-feedback">
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required />
+                    <input name="_password"
+                        type="password"
+                        id="inputPassword"
+                        class="form-control"
+                        placeholder="Password"
+                        required />
                     <div id="password-error" class="text-danger"></div>
-                    <input type="password" id="inputPassword2" class="form-control" placeholder="Confirm Password" required />
+                    <input name="_password2"
+                        type="password"
+                        id="inputPassword2"
+                        class="form-control"
+                        placeholder="Confirm Password"
+                        required />
                 </div>
 
                 Password Strength:
