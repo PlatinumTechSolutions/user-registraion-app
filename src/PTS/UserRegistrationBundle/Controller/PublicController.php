@@ -93,7 +93,19 @@ class PublicController extends Controller
      */
     public function registerAction(Request $request)
     {
-        return $this->render('PTSUserRegistrationBundle:Public:register.html.twig');
+        return $this->render('PTSUserRegistrationBundle:Public:register.html.twig', [
+            'first_name' => $request->get('_first_name', ''),
+            'last_name'  => $request->get('_last_name', ''),
+            'email'      => $request->get('_email', ''),
+        ]);
+    }
+
+    /**
+     * @Route("/register/new", name="register_new")
+     */
+    public function registerNewAction(Request $request)
+    {
+        return $this->redirectToRoute('register');
     }
 
     // Utilities
