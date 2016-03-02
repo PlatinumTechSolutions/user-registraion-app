@@ -10,7 +10,7 @@
                 <div class="alert alert-danger"><b>Error!</b> {{ flash_message }}</div>
             {% endfor %}
 
-            <form class="form-signin" method="POST" action="#">
+            <form id="form-register" class="form-signin" method="POST" action="#">
                 <input name="_first_name"
                     type="text"
                     id="inputFirstName"
@@ -41,7 +41,6 @@
                         class="form-control"
                         placeholder="Password"
                         required />
-                    <div id="password-error" class="text-danger"></div>
                     <input name="_password2"
                         type="password"
                         id="inputPassword2"
@@ -55,7 +54,7 @@
                     <div id="complexity-bar" class="progress-bar" role="progressbar">0%</div>
                 </div>
 
-                <button id="register-submit" class="btn btn-lg btn-primary btn-block btn-signin" type="submit" disabled />Register</button>
+                <button id="register-submit" class="btn btn-lg btn-primary btn-block btn-signin" type="submit" />Register</button>
             </form>
             <div class="pull-left">
                 <a href="{{ path('login_route') }}" class="form-signin-link">
@@ -73,43 +72,28 @@
 <script type="text/javascript">
 
 (function($) {
-    var passwordsMatch = false;
-    var passwordsOK    = false;
-    var passwordError  = $('#password-error');
-    var passwordInputs = $('#password-inputs');
-    var progressBar    = $('#complexity-bar');
-    var registerButton = $('#register-submit');
+    var progressBar = $('#complexity-bar');
 
     $('#inputPassword').complexify({}, function (valid, complexity) {
         progressBar.toggleClass('progress-bar-success', valid);
         progressBar.toggleClass('progress-bar-danger', !valid);
         progressBar.css({'width': complexity + '%'});
         progressBar.text(Math.round(complexity) + '%');
-
-        passwordsOK = (Math.round(complexity) > 0);
     });
 
-    $("#inputPassword").keyup(function()  { checkPassword(); });
-    $("#inputPassword2").keyup(function() { checkPassword(); });
+    var password1 = document.getElementById('inputPassword');
+    var password2 = document.getElementById('inputPassword2');
 
-    function checkPassword() {
-        if ($("#inputPassword").val() != $("#inputPassword2").val()) {
-            passwordInputs.addClass('has-error').removeClass('has-success');
-            passwordError.text('Error: Passwords do not match');
-            passwordsMatch = false;
+    function validatePassword() {
+        if (password1.value != password2.value) {
+            password2.setCustomValidity("Passwords Don't Match");
         } else {
-            passwordError.text('');
-            passwordInputs.addClass('has-success').removeClass('has-error');
-            passwordsMatch = true;
-        }
-
-        if ((passwordsOK == true) && (passwordsMatch == true)) {
-            registerButton.removeAttr('disabled');
-        } else {
-            registerButton.attr('disabled','disabled');
+            password2.setCustomValidity('');
         }
     }
 
+    password1.addEventListener('change', validatePassword);
+    password2.addEventListener('change', validatePassword);
 })(jQuery);
 
 </script>

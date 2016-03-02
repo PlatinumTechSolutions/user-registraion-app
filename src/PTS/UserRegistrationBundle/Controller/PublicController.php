@@ -105,7 +105,7 @@ class PublicController extends Controller
      */
     public function registerNewAction(Request $request)
     {
-        $this->redirectToRoute('register');
+        return $this->redirectToRoute('register');
     }
 
     // Utilities

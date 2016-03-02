@@ -371,6 +371,27 @@ class PublicControllerTest extends WebTestCase
 
     /**
      * @test
+     */
+    public function registerNewAction()
+    {
+        $response = $this->getBlankMock(Response::class);
+        $request  = $this->getBlankMock(Request::class);
+
+        $controller = $this->getMockBuilder(PublicController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['redirectToRoute'])
+            ->getMock();
+
+        $controller->expects(self::once())
+            ->method('redirectToRoute')
+            ->with(self::equalTo('register'))
+            ->will(self::returnValue($response));
+
+        self::assertEquals($response, $controller->registerNewAction($request));
+    }
+
+    /**
+     * @test
      * @dataProvider userHashTypes
      */
     public function generateUserHash($type)
