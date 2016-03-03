@@ -254,6 +254,16 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Get full name (first_name last_name)
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return trim(sprintf('%s %s', $this->getFirstName(), $this->getLastName()));
+    }
+
+    /**
      * Set email
      *
      * @param string $email

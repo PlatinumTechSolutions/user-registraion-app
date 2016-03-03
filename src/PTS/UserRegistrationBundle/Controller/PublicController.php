@@ -81,11 +81,22 @@ class PublicController extends Controller
     }
 
     /**
-     * @Route("/login/resetPassword", name="resetPassword")
+     * @Route("/login/resetPassword/{hashValue}", name="resetPassword")
      */
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request, $hashValue)
     {
-        return $this->render('PTSUserRegistrationBundle:Public:resetPassword.html.twig');
+        $userHash = $this->getRepository(UserHash::class)->findOneBy([
+            'type'  => UserHash::TYPE_PASSWORD_RESET,
+            'value' => $hashValue,
+        ]);
+
+        if (!$userHash) {
+            throw $this->createNotFoundException('Invalid UserHash provided');
+        }
+
+        return $this->render('PTSUserRegistrationBundle:Public:resetPassword.html.twig', [
+            'userHash' => $userHash,
+        ]);
     }
 
     /**
