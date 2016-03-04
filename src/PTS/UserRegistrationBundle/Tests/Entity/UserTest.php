@@ -23,6 +23,8 @@ class UserTest extends WebTestCase
         self::assertEquals(null, $entity->getLastName());
         self::assertEquals(null, $entity->getSalt());
 
+        self::assertEquals('', $entity->getFullName());
+
         // booleans
         self::assertTrue($entity->getEnabled());
         self::assertFalse($entity->getAdminStatus());
@@ -124,6 +126,20 @@ class UserTest extends WebTestCase
         self::assertEquals(new ArrayCollection(), $user->getUserHashes());
     }
 
+    /**
+     * @test
+     * @dataProvider fullNameValues
+     */
+    public function getFullName($first_name, $last_name, $full_name)
+    {
+        $entity = new User();
+
+        $entity->setFirstName($first_name)
+            ->setLastName($last_name);
+
+        self::assertEquals($full_name, $entity->getFullName());
+    }
+
     // data providers
 
     public function mutatorValues()
@@ -139,6 +155,18 @@ class UserTest extends WebTestCase
 
             ['enabled',     true],
             ['adminStatus', true],
+        ];
+    }
+
+    public function fullNameValues()
+    {
+        return [
+            ['foo', '', 'foo'],
+            ['', 'foo', 'foo'],
+
+            ['foo', 'bar', 'foo bar'],
+
+            ['', '', ''],
         ];
     }
 }

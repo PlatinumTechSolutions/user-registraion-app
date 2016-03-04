@@ -138,4 +138,14 @@ class UserHash
     {
         return $this->user;
     }
+
+    /**
+     * Get full name for user
+     *
+     * @return string
+     */
+    public function getUserFullName()
+    {
+        return $this->getUser()->getFullName();
+    }
 }

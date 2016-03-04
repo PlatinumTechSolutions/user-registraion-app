@@ -61,6 +61,33 @@ class UserHashTest extends WebTestCase
         self::assertTrue($userHash->validate());
     }
 
+    /**
+     * @test
+     */
+    public function getUserFullName()
+    {
+        $full_name = uniqid();
+
+        $user = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user->expects(self::once())
+            ->method('getFullName')
+            ->will(self::returnValue($full_name));
+
+        $userHash = $this->getMockBuilder(UserHash::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getUser'])
+            ->getMock();
+
+        $userHash->expects(self::once())
+            ->method('getUser')
+            ->will(self::returnValue($user));
+
+        self::assertEquals($full_name, $userHash->getUserFullName());
+    }
+
     // data providers
 
     public function mutatorValues()
