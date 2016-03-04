@@ -159,12 +159,12 @@ class PublicControllerTest extends WebTestCase
             ->with(self::equalTo('_email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
-        $respository = $this->getMockBuilder(UserRepository::class)
+        $repository = $this->getMockBuilder(UserRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(['findOneByEmail'])
             ->getMock();
 
-        $respository->expects(self::once())
+        $repository->expects(self::once())
             ->method('findOneByEmail')
             ->will(self::returnValue(null));
 
@@ -176,7 +176,7 @@ class PublicControllerTest extends WebTestCase
         $controller->expects(self::once())
             ->method('getRepository')
             ->with(self::equalTo(User::class))
-            ->will(self::returnValue($respository));
+            ->will(self::returnValue($repository));
 
         $controller->expects(self::once())
             ->method('addFlash')
@@ -220,12 +220,12 @@ class PublicControllerTest extends WebTestCase
             ->with(self::equalTo('_email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
-        $respository = $this->getMockBuilder(UserRepository::class)
+        $repository = $this->getMockBuilder(UserRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(['findOneByEmail'])
             ->getMock();
 
-        $respository->expects(self::once())
+        $repository->expects(self::once())
             ->method('findOneByEmail')
             ->will(self::returnValue($user));
 
@@ -237,7 +237,7 @@ class PublicControllerTest extends WebTestCase
         $controller->expects(self::once())
             ->method('getRepository')
             ->with(self::equalTo(User::class))
-            ->will(self::returnValue($respository));
+            ->will(self::returnValue($repository));
 
         $controller->expects(self::once())
             ->method('addFlash')
@@ -285,12 +285,12 @@ class PublicControllerTest extends WebTestCase
             ->with(self::equalTo('_email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
-        $respository = $this->getMockBuilder(UserRepository::class)
+        $repository = $this->getMockBuilder(UserRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(['findOneByEmail'])
             ->getMock();
 
-        $respository->expects(self::once())
+        $repository->expects(self::once())
             ->method('findOneByEmail')
             ->will(self::returnValue($user));
 
@@ -302,7 +302,7 @@ class PublicControllerTest extends WebTestCase
         $controller->expects(self::once())
             ->method('getRepository')
             ->with(self::equalTo(User::class))
-            ->will(self::returnValue($respository));
+            ->will(self::returnValue($repository));
 
         $controller->expects(self::once())
             ->method('addFlash')
@@ -332,20 +332,83 @@ class PublicControllerTest extends WebTestCase
      */
     public function resetPassword()
     {
+        $hashValue = uniqid();
+
         $response = $this->getBlankMock(Response::class);
         $request  = $this->getBlankMock(Request::class);
+        $userHash = $this->getBlankMock(UserHash::class);
+
+        $repository = $this->getMockBuilder(UserRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['findOneBy'])
+            ->getMock();
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->with(self::equalTo([
+                'type'  => UserHash::TYPE_PASSWORD_RESET,
+                'value' => $hashValue,
+            ]))
+            ->will(self::returnValue($userHash));
 
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['render'])
+            ->setMethods(['getRepository', 'render'])
             ->getMock();
 
         $controller->expects(self::once())
+            ->method('getRepository')
+            ->with(self::equalTo(UserHash::class))
+            ->will(self::returnValue($repository));
+
+        $controller->expects(self::once())
             ->method('render')
-            ->with(self::equalTo('PTSUserRegistrationBundle:Public:resetPassword.html.twig'))
+            ->with(
+                self::equalTo('PTSUserRegistrationBundle:Public:resetPassword.html.twig'),
+                self::equalTo([
+                    'userHash' => $userHash,
+                ])
+            )
             ->will(self::returnValue($response));
 
-        self::assertEquals($response, $controller->resetPassword($request));
+        self::assertEquals($response, $controller->resetPassword($request, $hashValue));
+    }
+
+    /**
+     * @test
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @expectedExceptionMessage Invalid UserHash provided
+     */
+    public function resetPasswordNotFoundException()
+    {
+        $hashValue = uniqid();
+
+        $repository = $this->getMockBuilder(UserRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['findOneBy'])
+            ->getMock();
+
+        $repository->expects(self::once())
+            ->method('findOneBy')
+            ->with(self::equalTo([
+                'type'  => UserHash::TYPE_PASSWORD_RESET,
+                'value' => $hashValue,
+            ]))
+            ->will(self::returnValue(null));
+
+        $controller = $this->getMockBuilder(PublicController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getRepository'])
+            ->getMock();
+
+        $controller->expects(self::once())
+            ->method('getRepository')
+            ->with(self::equalTo(UserHash::class))
+            ->will(self::returnValue($repository));
+
+        $request = $this->getBlankMock(Request::class);
+
+        $controller->resetPassword($request, $hashValue);
     }
 
     /**
