@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use PTS\UserRegistrationBundle\Entity\User;
 use PTS\UserRegistrationBundle\Entity\UserHash;
+use PTS\UserRegistrationBundle\Form\UserType;
 
 class PublicController extends Controller
 {
@@ -104,19 +105,21 @@ class PublicController extends Controller
      */
     public function registerAction(Request $request)
     {
-        return $this->render('PTSUserRegistrationBundle:Public:register.html.twig', [
-            'first_name' => $request->get('_first_name', ''),
-            'last_name'  => $request->get('_last_name', ''),
-            'email'      => $request->get('_email', ''),
-        ]);
-    }
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
 
-    /**
-     * @Route("/register/new", name="register_new")
-     */
-    public function registerNewAction(Request $request)
-    {
-        return $this->redirectToRoute('register');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            echo '33';
+        }
+
+        return $this->render('PTSUserRegistrationBundle:Public:register.html.twig', [
+            'first_name' => $request->get('first_name', ''),
+            'last_name'  => $request->get('last_name', ''),
+            'email'      => $request->get('email', ''),
+
+            'form' => $form->createView(),
+        ]);
     }
 
     // Utilities

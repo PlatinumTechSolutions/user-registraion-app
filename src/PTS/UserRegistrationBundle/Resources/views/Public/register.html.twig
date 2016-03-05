@@ -10,26 +10,29 @@
                 <div class="alert alert-danger"><b>Error!</b> {{ flash_message }}</div>
             {% endfor %}
 
-            <form id="form-register" class="form-signin" method="POST" action="{{ path('register_new') }}">
+            <form id="form-register" class="form-signin" method="POST" action="{{ path('register') }}">
 
                 <input name="first_name"
                     type="text"
-                    id="inputFirstName"
+                    id="user_first_name"
+                    name="user[first_name]"
                     class="form-control"
                     placeholder="First Name"
-                    value="{{first_name}}"
+                    value="{{ first_name }}"
                     required
                     autofocus />
                 <input name="last_name"
                     type="text"
-                    id="inputLastName"
+                    id="user_last_name"
+                    name="user[last_name]"
                     class="form-control"
                     placeholder="Last Name"
                     value="{{ last_name }}"
                     required />
                 <input name="email"
                     type="email"
-                    id="inputEmail"
+                    id="user_last_email"
+                    name="user[email]"
                     class="form-control"
                     placeholder="Email"
                     value="{{ email }}"
