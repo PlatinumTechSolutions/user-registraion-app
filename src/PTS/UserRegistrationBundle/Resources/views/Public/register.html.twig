@@ -1,5 +1,9 @@
 {% extends 'public.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block form_label %}{% endblock %}
+
 {% block body %}
 
     <div class="container">
@@ -10,38 +14,18 @@
                 <div class="alert alert-danger"><b>Error!</b> {{ flash_message }}</div>
             {% endfor %}
 
-            <form id="form-register" class="form-signin" method="POST" action="{{ path('register') }}">
+            {{ form_start(form, { 'attr': {'class': 'form-signin'} }) }}
 
-                <input name="first_name"
-                    type="text"
-                    id="user_first_name"
-                    name="user[first_name]"
-                    class="form-control"
-                    placeholder="First Name"
-                    value="{{ first_name }}"
-                    required
-                    autofocus />
-                <input name="last_name"
-                    type="text"
-                    id="user_last_name"
-                    name="user[last_name]"
-                    class="form-control"
-                    placeholder="Last Name"
-                    value="{{ last_name }}"
-                    required />
-                <input name="email"
-                    type="email"
-                    id="user_last_email"
-                    name="user[email]"
-                    class="form-control"
-                    placeholder="Email"
-                    value="{{ email }}"
-                    required />
+                {{ form_row(form.first_name, { 'attr': {'class': 'form-control', 'autofocus': true }}) }}
+                {{ form_row(form.last_name, { 'attr': {'class': 'form-control' }}) }}
+                {{ form_row(form.email, { 'attr': {'class': 'form-control' }}) }}
 
                 {% include 'PTSUserRegistrationBundle:Public:partials/passwordInputFields.html.twig' %}
 
                 <button id="register-submit" class="btn btn-lg btn-primary btn-block btn-signin" type="submit" />Register</button>
-            </form>
+
+            {{ form_end(form) }}
+
             <div class="pull-left">
                 <a href="{{ path('login_route') }}" class="form-signin-link">
                     Login
