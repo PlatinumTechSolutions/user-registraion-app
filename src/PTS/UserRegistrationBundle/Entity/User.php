@@ -33,7 +33,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @Assert\NotBlank()
      * @Assert\Length(max=200)
      */
-    private $plainPassword;
+    private $newPassword;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -119,9 +119,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return string
      */
-    public function getPlainPassword()
+    public function getNewPassword()
     {
-        return $this->plainPassword;
+        return $this->newPassword;
     }
 
     /**
@@ -131,9 +131,9 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @return User
      */
-    public function setPlainPassword($password)
+    public function setNewPassword($password)
     {
-        $this->plainPassword = $password;
+        $this->newPassword = $password;
 
         return $this;
     }
