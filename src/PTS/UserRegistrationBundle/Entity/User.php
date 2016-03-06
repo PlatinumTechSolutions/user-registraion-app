@@ -24,7 +24,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please tell me your email address")
      * @Assert\Email()
      */
     private $email;
@@ -42,14 +42,14 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please tell me your first name")
      * @Assert\Length(max=255)
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please tell me your last name")
      * @Assert\Length(max=255)
      */
     private $last_name;
