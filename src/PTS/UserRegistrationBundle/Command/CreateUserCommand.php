@@ -67,6 +67,7 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $user->setEmail($email)
             ->setPassword($encPassword)
+            ->setEnabled(true)
             // any user we add on the commandline will be considered an admin
             ->setAdminStatus(true);
 
