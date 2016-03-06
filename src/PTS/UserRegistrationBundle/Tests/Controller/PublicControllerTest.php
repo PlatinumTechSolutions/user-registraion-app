@@ -3,15 +3,18 @@
 namespace PTS\UserRegistrationBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PTS\UserRegistrationBundle\Controller\PublicController;
+use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
+use PTS\UserRegistrationBundle\Controller\PublicController;
 use PTS\UserRegistrationBundle\Entity\User;
 use PTS\UserRegistrationBundle\Entity\UserRepository;
 use PTS\UserRegistrationBundle\Entity\UserHash;
 use PTS\UserRegistrationBundle\Entity\UserHashRepository;
+use PTS\UserRegistrationBundle\Type\UserType;
 
 class PublicControllerTest extends WebTestCase
 {
@@ -416,17 +419,50 @@ class PublicControllerTest extends WebTestCase
      */
     public function registerAction()
     {
+        $user = $this->getBlankMock(User::class);
+
         $response = $this->getBlankMock(Response::class);
         $request  = $this->getBlankMock(Request::class);
 
+        $repository = $this->getMockBuilder(UserRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['newUser'])
+            ->getMock();
+
+        $repository->expects(self::once())
+            ->method('newUser')
+            ->will(self::returnValue($user));
+
+        $form = $this->getMockBuilder(Form::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handleRequest', 'isSubmitted', 'isValid', 'createView'])
+            ->getMock();
+
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['render'])
+            ->setMethods(['getRepository', 'createForm', 'render'])
             ->getMock();
 
         $controller->expects(self::once())
+            ->method('getRepository')
+            ->with(self::equalTo(User::class))
+            ->will(self::returnValue($repository));
+
+        $controller->expects(self::once())
+            ->method('createForm')
+            ->with(
+                self::equalTo(UserType::class),
+                self::equalTo($user)
+            )
+            ->will(self::returnValue($form));
+
+        $controller->expects(self::once())
             ->method('render')
-            ->with(self::equalTo('PTSUserRegistrationBundle:Public:register.html.twig'))
+            ->with(
+                self::equalTo('PTSUserRegistrationBundle:Public:register.html.twig'),
+                self::equalTo([
+                    'form' => null
+                ]))
             ->will(self::returnValue($response));
 
         self::assertEquals($response, $controller->registerAction($request));
@@ -435,22 +471,81 @@ class PublicControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function registerNewAction()
+    public function registerActionSubmitted()
     {
+        $user = $this->getBlankMock(User::class);
+
+        $user->expects(self::once())->method('getNewPassword');
+        $user->expects(self::once())->method('setPassword');
+
         $response = $this->getBlankMock(Response::class);
         $request  = $this->getBlankMock(Request::class);
 
+        $repository = $this->getMockBuilder(UserRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['newUser'])
+            ->getMock();
+
+        $repository->expects(self::once())
+            ->method('newUser')
+            ->will(self::returnValue($user));
+
+        $form = $this->getMockBuilder(Form::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handleRequest', 'isSubmitted', 'isValid'])
+            ->getMock();
+
+        $form->expects(self::once())->method('isSubmitted')->will(self::returnValue(true));
+        $form->expects(self::once())->method('isValid')->will(self::returnValue(true));
+
+        $manager = $this->getBlankMock(EntityManager::class);
+        $manager->expects(self::once())->method('persist')->with($user);
+        $manager->expects(self::once())->method('flush');
+
+        $registry = $this->getMockBuilder(Registry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $registry->expects(self::once())
+            ->method('getManager')
+            ->will(self::returnValue($manager));
+
+        $password_encoder = $this->getBlankMock(BasePasswordEncoder::class);
+        $password_encoder->expects(self::once())->method('encodePassword');
+
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['redirectToRoute'])
+            ->setMethods(['getRepository', 'createForm', 'get', 'getDoctrine', 'render'])
             ->getMock();
 
         $controller->expects(self::once())
-            ->method('redirectToRoute')
-            ->with(self::equalTo('register'))
+            ->method('getRepository')
+            ->with(self::equalTo(User::class))
+            ->will(self::returnValue($repository));
+
+        $controller->expects(self::once())
+            ->method('createForm')
+            ->with(
+                self::equalTo(UserType::class),
+                self::equalTo($user)
+            )
+            ->will(self::returnValue($form));
+
+        $controller->expects(self::once())
+            ->method('get')
+            ->with(self::equalTo('security.password_encoder'))
+            ->will(self::returnValue($password_encoder));
+
+        $controller->expects(self::once())
+            ->method('getDoctrine')
+            ->will(self::returnValue($registry));
+
+        $controller->expects(self::once())
+            ->method('render')
+            ->with(self::equalTo('PTSUserRegistrationBundle:Public:registerComplete.html.twig'))
             ->will(self::returnValue($response));
 
-        self::assertEquals($response, $controller->registerNewAction($request));
+        self::assertEquals($response, $controller->registerAction($request));
     }
 
     /**

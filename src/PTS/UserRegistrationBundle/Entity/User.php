@@ -4,25 +4,36 @@ namespace PTS\UserRegistrationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="UserRepository")
+ * @UniqueEntity(fields="email", message="Email already taken")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
     /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\Id
+     * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Please tell me your email address")
+     * @Assert\Email()
      */
-    private $username;
+    private $email;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=200)
+     */
+    private $newPassword;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -31,18 +42,17 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Please tell me your first name")
+     * @Assert\Length(max=255)
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Please tell me your last name")
+     * @Assert\Length(max=255)
      */
     private $last_name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
 
     /**
      * @ORM\Column(type="boolean")
@@ -80,21 +90,21 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return string
      */
-    public function getUsername()
+    public function getNewPassword()
     {
-        return $this->username;
+        return $this->newPassword;
     }
 
     /**
-     * Set username
+     * Set plain password
      *
-     * @param string $username
+     * @param string $password
      *
      * @return User
      */
-    public function setUsername($username)
+    public function setNewPassword($password)
     {
-        $this->username = $username;
+        $this->newPassword = $password;
 
         return $this;
     }
@@ -119,6 +129,14 @@ class User implements AdvancedUserInterface, \Serializable
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getUsername()
+    {
+        return null;
     }
 
     /**
@@ -174,7 +192,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return serialize([
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
         ]);
     }
@@ -184,7 +202,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         list (
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
         ) = unserialize($serialized);
     }

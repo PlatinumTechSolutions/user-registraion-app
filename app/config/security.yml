@@ -11,7 +11,7 @@ security:
         our_db_provider:
             entity:
                 class: PTSUserRegistrationBundle:User
-                property: username
+                property: email
     firewalls:
         default:
             anonymous: ~

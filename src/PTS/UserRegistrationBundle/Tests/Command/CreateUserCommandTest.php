@@ -41,7 +41,7 @@ class CreateUserCommandTest extends WebTestCase
         $command->expects(self::exactly(2))
             ->method('addArgument')
             ->withConsecutive(
-                ['username', InputArgument::OPTIONAL, 'Username for this user'],
+                ['email', InputArgument::OPTIONAL, 'Email for this user'],
                 ['password', InputArgument::OPTIONAL, 'Password for this user']
             )
             ->will(self::returnValue($command));
@@ -69,7 +69,7 @@ class CreateUserCommandTest extends WebTestCase
     /**
      * @test
      */
-    public function getUsernameQuestion()
+    public function getEmailQuestion()
     {
         $question = $this->getBlankMock(Question::class);
 
@@ -80,10 +80,10 @@ class CreateUserCommandTest extends WebTestCase
 
         $command->expects(self::once())
             ->method('newQuestion')
-            ->with(self::equalTo('  <info>Username</info>: '))
+            ->with(self::equalTo('  <info>Email</info>: '))
             ->will(self::returnValue($question));
 
-        self::assertEquals($question, $command->getUsernameQuestion());
+        self::assertEquals($question, $command->getEmailQuestion());
     }
 
     /**
@@ -127,7 +127,7 @@ class CreateUserCommandTest extends WebTestCase
      */
     public function executeWithArguments($creatUserResponse, $writelnMessage)
     {
-        $username = uniqid();
+        $email    = uniqid();
         $password = uniqid();
 
         $input = $this->getMockBuilder(InputInterface::class)
@@ -138,10 +138,10 @@ class CreateUserCommandTest extends WebTestCase
         $input->expects(self::exactly(2))
             ->method('getArgument')
             ->withConsecutive(
-                [self::equalTo('username')],
+                [self::equalTo('email')],
                 [self::equalTo('password')]
             )
-            ->will(self::onConsecutiveCalls($username, $password));
+            ->will(self::onConsecutiveCalls($email, $password));
 
         $command = $this->getMockBuilder(CreateUserCommand::class)
             ->disableOriginalConstructor()
@@ -150,7 +150,7 @@ class CreateUserCommandTest extends WebTestCase
 
         $command->expects(self::once())
             ->method('createUser')
-            ->with(self::equalTo($username), self::equalTo($password))
+            ->with(self::equalTo($email), self::equalTo($password))
             ->will(self::returnValue($creatUserResponse));
 
         $output = $this->getMockBuilder(OutputInterface::class)
@@ -170,7 +170,7 @@ class CreateUserCommandTest extends WebTestCase
      */
     public function executeWithoutArguments()
     {
-        $username = uniqid();
+        $email    = uniqid();
         $password = uniqid();
 
         $input = $this->getMockBuilder(InputInterface::class)
@@ -181,7 +181,7 @@ class CreateUserCommandTest extends WebTestCase
         $input->expects(self::exactly(2))
             ->method('getArgument')
             ->withConsecutive(
-                [self::equalTo('username')],
+                [self::equalTo('email')],
                 [self::equalTo('password')]
             )
             ->will(self::returnValue(null));
@@ -194,7 +194,7 @@ class CreateUserCommandTest extends WebTestCase
         $output->expects(self::exactly(2))
             ->method('writeln')
             ->withConsecutive(
-                [self::equalTo('<comment>Please provide a username and password:</comment>')],
+                [self::equalTo('<comment>Please provide a email and password:</comment>')],
                 [self::equalTo('<info>DONE</info>')]
             );
 
@@ -215,7 +215,7 @@ class CreateUserCommandTest extends WebTestCase
 
         $command = $this->getMockBuilder(CreateUserCommand::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getHelper', 'getUsernameQuestion', 'getPasswordQuestion', 'createUser'])
+            ->setMethods(['getHelper', 'getEmailQuestion', 'getPasswordQuestion', 'createUser'])
             ->getMockForAbstractClass();
 
         $command->expects(self::once())
@@ -224,7 +224,7 @@ class CreateUserCommandTest extends WebTestCase
             ->will(self::returnValue($helper));
 
         $command->expects(self::once())
-            ->method('getUsernameQuestion')
+            ->method('getEmailQuestion')
             ->will(self::returnValue($question1));
 
         $command->expects(self::once())
@@ -274,15 +274,15 @@ class CreateUserCommandTest extends WebTestCase
      */
     public function createUser()
     {
-        $username    = 'user-569e57646c372';
+        $email       = 'user-569e57646c372@foo.com';
         $password    = 'password';
         $encPassword = md5($password);
 
         $user = $this->getBlankMock(User::class);
 
         $user->expects(self::once())
-            ->method('setUsername')
-            ->with($username)
+            ->method('setEmail')
+            ->with($email)
             ->will(self::returnValue($user));
 
         $user->expects(self::once())
@@ -352,7 +352,7 @@ class CreateUserCommandTest extends WebTestCase
             ->method('getContainer')
             ->will(self::returnValue($container));
 
-        self::assertTrue($command->createUser($username, $password));
+        self::assertTrue($command->createUser($email, $password));
     }
 
     // data providers
