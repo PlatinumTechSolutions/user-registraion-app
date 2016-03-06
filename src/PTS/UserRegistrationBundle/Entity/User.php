@@ -72,7 +72,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         // a couple of default for new users
-        $this->enabled      = true;
+        $this->enabled      = false;
         $this->admin_status = false;
         $this->userHashes   = new ArrayCollection();
     }

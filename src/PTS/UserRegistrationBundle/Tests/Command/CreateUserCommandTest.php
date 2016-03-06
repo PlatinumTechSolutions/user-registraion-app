@@ -291,6 +291,11 @@ class CreateUserCommandTest extends WebTestCase
             ->will(self::returnValue($user));
 
         $user->expects(self::once())
+            ->method('setEnabled')
+            ->with(true)
+            ->will(self::returnValue($user));
+
+        $user->expects(self::once())
             ->method('setAdminStatus')
             ->with(true)
             ->will(self::returnValue($user));
