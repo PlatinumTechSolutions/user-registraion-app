@@ -1,6 +1,6 @@
 <?php
 
-namespace PTS\UserRegistrationBundle\Form;
+namespace PTS\UserRegistrationBundle\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

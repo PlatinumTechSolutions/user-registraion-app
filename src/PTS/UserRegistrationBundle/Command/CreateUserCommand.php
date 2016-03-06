@@ -21,7 +21,7 @@ class CreateUserCommand extends ContainerAwareCommand
     {
         $this->setName('pts:createUser')
             ->setDescription('create a new user')
-            ->addArgument('username', InputArgument::OPTIONAL, 'Username for this user')
+            ->addArgument('email',    InputArgument::OPTIONAL, 'Email for this user')
             ->addArgument('password', InputArgument::OPTIONAL, 'Password for this user');
     }
 
@@ -33,17 +33,17 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $username = $input->getArgument('username');
+        $email    = trim($input->getArgument('email'));
         $password = trim($input->getArgument('password'));
 
-        if (!($username && $password)) {
-            $output->writeln('<comment>Please provide a username and password:</comment>');
+        if (!($email && $password)) {
+            $output->writeln('<comment>Please provide a email and password:</comment>');
 
             $helper   = $this->getHelper('question');
-            $username = $helper->ask($input, $output, $this->getUsernameQuestion());
+            $email    = $helper->ask($input, $output, $this->getEmailQuestion());
             $password = $helper->ask($input, $output, $this->getPasswordQuestion());
         }
-        if ($this->createUser($username, $password) === true) {
+        if ($this->createUser($email, $password) === true) {
             $output->writeln('<info>DONE</info>');
         } else {
             $output->writeln('<error>ERROR</error>');
@@ -55,7 +55,7 @@ class CreateUserCommand extends ContainerAwareCommand
      *
      * @param
      */
-    public function createUser($username, $password)
+    public function createUser($email, $password)
     {
         $container = $this->getContainer();
 
@@ -65,7 +65,7 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $encPassword = $container->get('security.password_encoder')->encodePassword($user, $password);
 
-        $user->setUsername($username)
+        $user->setEmail($email)
             ->setPassword($encPassword)
             // any user we add on the commandline will be considered an admin
             ->setAdminStatus(true);
@@ -83,9 +83,9 @@ class CreateUserCommand extends ContainerAwareCommand
         return new Question($text);
     }
 
-    public function getUsernameQuestion()
+    public function getEmailQuestion()
     {
-        return $this->newQuestion('  <info>Username</info>: ');
+        return $this->newQuestion('  <info>Email</info>: ');
     }
 
     public function getPasswordQuestion()

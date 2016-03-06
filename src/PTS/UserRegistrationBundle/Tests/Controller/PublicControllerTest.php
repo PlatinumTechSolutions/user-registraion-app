@@ -3,15 +3,17 @@
 namespace PTS\UserRegistrationBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PTS\UserRegistrationBundle\Controller\PublicController;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
+use PTS\UserRegistrationBundle\Controller\PublicController;
 use PTS\UserRegistrationBundle\Entity\User;
 use PTS\UserRegistrationBundle\Entity\UserRepository;
 use PTS\UserRegistrationBundle\Entity\UserHash;
 use PTS\UserRegistrationBundle\Entity\UserHashRepository;
+use PTS\UserRegistrationBundle\Type\UserType;
 
 class PublicControllerTest extends WebTestCase
 {
@@ -416,41 +418,53 @@ class PublicControllerTest extends WebTestCase
      */
     public function registerAction()
     {
+        $user = $this->getBlankMock(User::class);
+
         $response = $this->getBlankMock(Response::class);
         $request  = $this->getBlankMock(Request::class);
 
+        $repository = $this->getMockBuilder(UserRepository::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['newUser'])
+            ->getMock();
+
+        $repository->expects(self::once())
+            ->method('newUser')
+            ->will(self::returnValue($user));
+
+        $form = $this->getMockBuilder(Form::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handleRequest', 'isSubmitted', 'isValid', 'createView'])
+            ->getMock();
+
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['render'])
+            ->setMethods(['getRepository', 'createForm', 'render'])
             ->getMock();
+
+        $controller->expects(self::once())
+            ->method('getRepository')
+            ->with(self::equalTo(User::class))
+            ->will(self::returnValue($repository));
+
+        $controller->expects(self::once())
+            ->method('createForm')
+            ->with(
+                self::equalTo(UserType::class),
+                self::equalTo($user)
+            )
+            ->will(self::returnValue($form));
 
         $controller->expects(self::once())
             ->method('render')
-            ->with(self::equalTo('PTSUserRegistrationBundle:Public:register.html.twig'))
+            ->with(
+                self::equalTo('PTSUserRegistrationBundle:Public:register.html.twig'),
+                self::equalTo([
+                    'form' => null
+                ]))
             ->will(self::returnValue($response));
 
         self::assertEquals($response, $controller->registerAction($request));
-    }
-
-    /**
-     * @test
-     */
-    public function registerNewAction()
-    {
-        $response = $this->getBlankMock(Response::class);
-        $request  = $this->getBlankMock(Request::class);
-
-        $controller = $this->getMockBuilder(PublicController::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['redirectToRoute'])
-            ->getMock();
-
-        $controller->expects(self::once())
-            ->method('redirectToRoute')
-            ->with(self::equalTo('register'))
-            ->will(self::returnValue($response));
-
-        self::assertEquals($response, $controller->registerNewAction($request));
     }
 
     /**

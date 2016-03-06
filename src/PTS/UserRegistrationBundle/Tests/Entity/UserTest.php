@@ -66,9 +66,9 @@ class UserTest extends WebTestCase
     {
         $user = new User();
 
-        $user->setUsername('username')->setPassword('password');
+        $user->setEmail('email')->setPassword('password');
 
-        $data = 'a:3:{i:0;N;i:1;s:8:"username";i:2;s:8:"password";}';
+        $data = 'a:3:{i:0;N;i:1;s:5:"email";i:2;s:8:"password";}';
 
         self::assertEquals($user->serialize(), $data);
     }
@@ -78,11 +78,11 @@ class UserTest extends WebTestCase
      */
     public function unserialize()
     {
-        $data = serialize([12345, 'username', 'password']);
+        $data = serialize([12345, 'email', 'password']);
         $user = new User();
         $user->unserialize($data);
         self::assertEquals($user->getId(),       12345);
-        self::assertEquals($user->getUsername(), 'username');
+        self::assertEquals($user->getEmail(),    'email');
         self::assertEquals($user->getPassword(), 'password');
     }
 
@@ -145,13 +145,13 @@ class UserTest extends WebTestCase
     public function mutatorValues()
     {
         return [
-            ['username',  uniqid()],
-            ['password',  uniqid()],
-            ['firstName', uniqid()],
-            ['lastName',  uniqid()],
-            ['lastName',  uniqid()],
-
             ['email', sprintf('%s@%s.com', uniqid(), uniqid())],
+
+            ['password',    uniqid()],
+            ['newPassword', uniqid()],
+            ['firstName',   uniqid()],
+            ['lastName',    uniqid()],
+            ['lastName',    uniqid()],
 
             ['enabled',     true],
             ['adminStatus', true],
