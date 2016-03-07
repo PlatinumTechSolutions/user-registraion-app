@@ -49,7 +49,7 @@ class PublicController extends Controller
     public function forgottenPasswordAction(Request $request)
     {
         return $this->render('PTSUserRegistrationBundle:Public:forgottenPassword.html.twig', [
-            'last_email' => $request->get('_email', ''),
+            'last_email' => $request->get('email', ''),
         ]);
     }
 
@@ -58,7 +58,7 @@ class PublicController extends Controller
      */
     public function forgottenPasswordCheckAction(Request $request)
     {
-        $user = $this->getRepository(User::class)->findOneByEmail($request->get('_email', ''));
+        $user = $this->getRepository(User::class)->findOneByEmail($request->get('email', ''));
         if (!$user) {
             $this->addFlash('error', 'Sorry, There is no user matching with email address.');
 
@@ -120,12 +120,20 @@ class PublicController extends Controller
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->render('PTSUserRegistrationBundle:Public:registerComplete.html.twig');
+            return $this->redirectToRoute('registerComplete');
         }
 
         return $this->render('PTSUserRegistrationBundle:Public:register.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/register/complete", name="registerComplete")
+     */
+    public function registerCompleteAction(Request $request)
+    {
+        return $this->render('PTSUserRegistrationBundle:Public:registerComplete.html.twig');
     }
 
     // Utilities
