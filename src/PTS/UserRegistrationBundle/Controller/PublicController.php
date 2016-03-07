@@ -116,8 +116,11 @@ class PublicController extends Controller
 
             $user->setPassword($password);
 
+            $userHash = $this->generateUserHash($user, UserHash::TYPE_EMAIL_CONFIRMATION, false);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
+            $entityManager->persist($userHash);
             $entityManager->flush();
 
             return $this->redirectToRoute('registerComplete');
@@ -141,10 +144,12 @@ class PublicController extends Controller
     /**
      * Generate a new UserHash for a given user of a given type
      *
-     * @param User   $user
-     * @param string $type
+     * @param User    $user
+     * @param string  $type
+     * @param boolean $auto_save
+     * @return UserHash
      */
-    public function generateUserHash(User $user, $type)
+    public function generateUserHash(User $user, $type, $auto_save = true)
     {
         $repository = $this->getRepository(UserHash::class);
 
@@ -153,10 +158,11 @@ class PublicController extends Controller
             ->setType($type)
             ->setValue($repository->generateNewValue());
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($userHash);
-        $entityManager->flush();
-
+        if ($auto_save === true) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($userHash);
+            $entityManager->flush();
+        }
         return $userHash;
     }
 
