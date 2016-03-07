@@ -478,6 +478,7 @@ class PublicControllerTest extends WebTestCase
         $user->expects(self::once())->method('getNewPassword');
         $user->expects(self::once())->method('setPassword');
 
+        $userHash = $this->getBlankMock(UserHash::class);
         $response = $this->getBlankMock(Response::class);
         $request  = $this->getBlankMock(Request::class);
 
@@ -499,8 +500,16 @@ class PublicControllerTest extends WebTestCase
         $form->expects(self::once())->method('isValid')->will(self::returnValue(true));
 
         $manager = $this->getBlankMock(EntityManager::class);
-        $manager->expects(self::once())->method('persist')->with($user);
-        $manager->expects(self::once())->method('flush');
+        
+        $manager->expects(self::exactly(2))
+            ->method('persist')
+            ->withConsecutive(
+                [self::equalTo($user)],
+                [self::equalTo($userHash)]
+            );
+
+        $manager->expects(self::once())
+            ->method('flush');
 
         $registry = $this->getMockBuilder(Registry::class)
             ->disableOriginalConstructor()
@@ -515,13 +524,22 @@ class PublicControllerTest extends WebTestCase
 
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getRepository', 'createForm', 'get', 'getDoctrine', 'redirectToRoute'])
+            ->setMethods(['getRepository', 'createForm', 'get', 'getDoctrine', 'redirectToRoute', 'generateUserHash'])
             ->getMock();
 
         $controller->expects(self::once())
             ->method('getRepository')
             ->with(self::equalTo(User::class))
             ->will(self::returnValue($repository));
+
+        $controller->expects(self::once())
+            ->method('generateUserHash')
+            ->with(
+                self::equalTo($user),
+                self::equalTo(UserHash::TYPE_EMAIL_CONFIRMATION),
+                self::equalTo(false)
+            )
+            ->will(self::returnValue($userHash));
 
         $controller->expects(self::once())
             ->method('createForm')
