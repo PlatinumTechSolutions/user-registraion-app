@@ -126,7 +126,7 @@ class PublicControllerTest extends WebTestCase
 
         $request->expects(self::once())
             ->method('get')
-            ->with(self::equalTo('_email'), self::equalTo(''))
+            ->with(self::equalTo('email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
         $controller = $this->getMockBuilder(PublicController::class)
@@ -159,7 +159,7 @@ class PublicControllerTest extends WebTestCase
 
         $request->expects(self::once())
             ->method('get')
-            ->with(self::equalTo('_email'), self::equalTo(''))
+            ->with(self::equalTo('email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
         $repository = $this->getMockBuilder(UserRepository::class)
@@ -220,7 +220,7 @@ class PublicControllerTest extends WebTestCase
 
         $request->expects(self::once())
             ->method('get')
-            ->with(self::equalTo('_email'), self::equalTo(''))
+            ->with(self::equalTo('email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
         $repository = $this->getMockBuilder(UserRepository::class)
@@ -285,7 +285,7 @@ class PublicControllerTest extends WebTestCase
 
         $request->expects(self::once())
             ->method('get')
-            ->with(self::equalTo('_email'), self::equalTo(''))
+            ->with(self::equalTo('email'), self::equalTo(''))
             ->will(self::returnValue($email));
 
         $repository = $this->getMockBuilder(UserRepository::class)
@@ -515,7 +515,7 @@ class PublicControllerTest extends WebTestCase
 
         $controller = $this->getMockBuilder(PublicController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getRepository', 'createForm', 'get', 'getDoctrine', 'render'])
+            ->setMethods(['getRepository', 'createForm', 'get', 'getDoctrine', 'redirectToRoute'])
             ->getMock();
 
         $controller->expects(self::once())
@@ -541,11 +541,32 @@ class PublicControllerTest extends WebTestCase
             ->will(self::returnValue($registry));
 
         $controller->expects(self::once())
+            ->method('redirectToRoute')
+            ->with(self::equalTo('registerComplete'))
+            ->will(self::returnValue($response));
+
+        self::assertEquals($response, $controller->registerAction($request));
+    }
+
+    /**
+     * @test
+     */
+    public function registerCompleteAction()
+    {
+        $response = $this->getBlankMock(Response::class);
+        $request  = $this->getBlankMock(Request::class);
+
+        $controller = $this->getMockBuilder(PublicController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['render'])
+            ->getMock();
+
+        $controller->expects(self::once())
             ->method('render')
             ->with(self::equalTo('PTSUserRegistrationBundle:Public:registerComplete.html.twig'))
             ->will(self::returnValue($response));
 
-        self::assertEquals($response, $controller->registerAction($request));
+        self::assertEquals($response, $controller->registerCompleteAction($request));
     }
 
     /**

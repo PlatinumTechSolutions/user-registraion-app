@@ -49,7 +49,7 @@ class PublicController extends Controller
     public function forgottenPasswordAction(Request $request)
     {
         return $this->render('PTSUserRegistrationBundle:Public:forgottenPassword.html.twig', [
-            'last_email' => $request->get('_email', ''),
+            'last_email' => $request->get('email', ''),
         ]);
     }
 
@@ -58,7 +58,7 @@ class PublicController extends Controller
      */
     public function forgottenPasswordCheckAction(Request $request)
     {
-        $user = $this->getRepository(User::class)->findOneByEmail($request->get('_email', ''));
+        $user = $this->getRepository(User::class)->findOneByEmail($request->get('email', ''));
         if (!$user) {
             $this->addFlash('error', 'Sorry, There is no user matching with email address.');
 
