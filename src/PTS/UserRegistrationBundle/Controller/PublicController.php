@@ -120,12 +120,20 @@ class PublicController extends Controller
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->render('PTSUserRegistrationBundle:Public:registerComplete.html.twig');
+            return $this->redirectToRoute('registerComplete');
         }
 
         return $this->render('PTSUserRegistrationBundle:Public:register.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/register/complete", name="registerComplete")
+     */
+    public function registerCompleteAction(Request $request)
+    {
+        return $this->render('PTSUserRegistrationBundle:Public:registerComplete.html.twig');
     }
 
     // Utilities
