@@ -280,25 +280,12 @@ class CreateUserCommandTest extends WebTestCase
 
         $user = $this->getBlankMock(User::class);
 
-        $user->expects(self::once())
-            ->method('setEmail')
-            ->with($email)
-            ->will(self::returnValue($user));
-
-        $user->expects(self::once())
-            ->method('setPassword')
-            ->with($encPassword)
-            ->will(self::returnValue($user));
-
-        $user->expects(self::once())
-            ->method('setEnabled')
-            ->with(true)
-            ->will(self::returnValue($user));
-
-        $user->expects(self::once())
-            ->method('setAdminStatus')
-            ->with(true)
-            ->will(self::returnValue($user));
+        $user->expects(self::once())->method('setFirstName')->with('Admin')->will(self::returnValue($user));
+        $user->expects(self::once())->method('setLastName')->with('User')->will(self::returnValue($user));
+        $user->expects(self::once())->method('setEmail')->with($email)->will(self::returnValue($user));
+        $user->expects(self::once())->method('setPassword')->with($encPassword)->will(self::returnValue($user));
+        $user->expects(self::once())->method('setEnabled')->with(true)->will(self::returnValue($user));
+        $user->expects(self::once())->method('setAdminStatus')->with(true)->will(self::returnValue($user));
 
         $userRepository = $this->getMockBuilder(UserRepository::class)
             ->disableOriginalConstructor()

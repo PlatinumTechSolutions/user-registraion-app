@@ -9,3 +9,9 @@ Symfony 3 app to allow user registration and login
 ```
 php bin/console doctrine:schema:create
 ```
+
+## Create an admin user
+
+```
+php bin/console pts:createUser
+```

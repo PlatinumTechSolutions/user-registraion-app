@@ -65,7 +65,9 @@ class CreateUserCommand extends ContainerAwareCommand
 
         $encPassword = $container->get('security.password_encoder')->encodePassword($user, $password);
 
-        $user->setEmail($email)
+        $user->setFirstName('Admin')
+            ->setLastName('User')
+            ->setEmail($email)
             ->setPassword($encPassword)
             ->setEnabled(true)
             // any user we add on the commandline will be considered an admin
