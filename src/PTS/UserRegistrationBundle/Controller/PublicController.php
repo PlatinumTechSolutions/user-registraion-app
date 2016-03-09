@@ -35,15 +35,6 @@ class PublicController extends Controller
     }
 
     /**
-    * @Route("/login_check", name="login_check")
-    */
-    public function loginCheckAction()
-    {
-        // this controller will not be executed,
-        // as the route is handled by the Security system
-    }
-
-    /**
      * @Route("/login/forgottenPassword", name="forgottenPassword")
      */
     public function forgottenPasswordAction(Request $request)
