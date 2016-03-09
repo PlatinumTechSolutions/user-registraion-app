@@ -26,7 +26,8 @@ class UserTest extends WebTestCase
         self::assertEquals('', $entity->getFullName());
 
         // booleans
-        self::assertFalse($entity->getEnabled());
+        self::assertTrue($entity->getEnabled());
+        self::assertFalse($entity->getActivated());
         self::assertFalse($entity->getAdminStatus());
 
         // arrays
@@ -41,8 +42,9 @@ class UserTest extends WebTestCase
         self::assertTrue($entity->isAccountNonExpired());
         self::assertTrue($entity->isAccountNonLocked());
         self::assertTrue($entity->isCredentialsNonExpired());
+        self::assertTrue($entity->isEnabled());
 
-        self::assertFalse($entity->isEnabled());
+        self::assertFalse($entity->hasActivated());
     }
 
     /**
@@ -156,6 +158,7 @@ class UserTest extends WebTestCase
 
             ['enabled',     true],
             ['adminStatus', true],
+            ['activated',   true],
         ];
     }
 
