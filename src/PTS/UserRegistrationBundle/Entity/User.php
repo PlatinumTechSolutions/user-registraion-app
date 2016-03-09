@@ -62,6 +62,11 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="boolean")
      */
+    private $activated;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
     private $admin_status;
 
     /**
@@ -72,7 +77,8 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         // a couple of default for new users
-        $this->enabled      = false;
+        $this->enabled      = true;
+        $this->activated    = false;
         $this->admin_status = false;
         $this->userHashes   = new ArrayCollection();
     }
@@ -185,6 +191,14 @@ class User implements AdvancedUserInterface, \Serializable
     public function isEnabled()
     {
         return (bool) $this->enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActivated()
+    {
+        return (bool) $this->activated;
     }
 
     /** @see \Serializable::serialize() */
@@ -386,5 +400,29 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUserHashes()
     {
         return $this->userHashes;
+    }
+
+    /**
+     * Set activated
+     *
+     * @param boolean $activated
+     *
+     * @return User
+     */
+    public function setActivated($activated)
+    {
+        $this->activated = $activated;
+
+        return $this;
+    }
+
+    /**
+     * Get activated
+     *
+     * @return boolean
+     */
+    public function getActivated()
+    {
+        return $this->activated;
     }
 }
