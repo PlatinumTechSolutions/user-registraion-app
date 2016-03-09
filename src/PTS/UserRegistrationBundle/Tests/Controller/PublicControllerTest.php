@@ -102,21 +102,6 @@ class PublicControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function loginCheckAction()
-    {
-        $request = $this->getBlankMock(Request::class);
-
-        $controller = $this->getMockBuilder(PublicController::class)
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
-
-        self::assertEquals(null, $controller->loginCheckAction($request));
-    }
-
-    /**
-     * @test
-     */
     public function forgottenPasswordAction()
     {
         $email = 'foo@bar.com';
@@ -500,7 +485,7 @@ class PublicControllerTest extends WebTestCase
         $form->expects(self::once())->method('isValid')->will(self::returnValue(true));
 
         $manager = $this->getBlankMock(EntityManager::class);
-        
+
         $manager->expects(self::exactly(2))
             ->method('persist')
             ->withConsecutive(
