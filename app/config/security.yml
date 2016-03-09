@@ -13,6 +13,10 @@ security:
                 class: PTSUserRegistrationBundle:User
                 property: email
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
         default:
             anonymous: ~
             http_basic: ~
@@ -25,10 +29,6 @@ security:
                 target: /
 
         # disables authentication for assets and the profiler, adapt it according to your needs
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
     role_hierarchy:
         # adamin users
         ROLE_ADMIN:
