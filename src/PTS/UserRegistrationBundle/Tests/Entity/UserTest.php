@@ -17,13 +17,13 @@ class UserTest extends WebTestCase
         $entity = new User();
 
         self::assertEquals(null, $entity->getId());
-        self::assertEquals(null, $entity->getUsername());
         self::assertEquals(null, $entity->getPassword());
         self::assertEquals(null, $entity->getFirstName());
         self::assertEquals(null, $entity->getLastName());
         self::assertEquals(null, $entity->getSalt());
 
         self::assertEquals('', $entity->getFullName());
+        self::assertEquals('Unnamed User', $entity->getUsername());
 
         // booleans
         self::assertTrue($entity->getEnabled());
@@ -69,9 +69,12 @@ class UserTest extends WebTestCase
     {
         $user = new User();
 
-        $user->setEmail('email')->setPassword('password');
+        $user->setEmail('email')
+            ->setPassword('password')
+            ->setFirstName('Joe')
+            ->setLastName('Bloggs');
 
-        $data = 'a:3:{i:0;N;i:1;s:5:"email";i:2;s:8:"password";}';
+        $data = 'a:5:{i:0;N;i:1;s:5:"email";i:2;s:8:"password";i:3;s:3:"Joe";i:4;s:6:"Bloggs";}';
 
         self::assertEquals($user->serialize(), $data);
     }
@@ -81,12 +84,15 @@ class UserTest extends WebTestCase
      */
     public function unserialize()
     {
-        $data = serialize([12345, 'email', 'password']);
+        $data = serialize([12345, 'email', 'password', 'joe', 'bloggs']);
         $user = new User();
         $user->unserialize($data);
-        self::assertEquals($user->getId(),       12345);
-        self::assertEquals($user->getEmail(),    'email');
-        self::assertEquals($user->getPassword(), 'password');
+        self::assertEquals($user->getId(),        12345);
+        self::assertEquals($user->getEmail(),     'email');
+        self::assertEquals($user->getPassword(),  'password');
+        self::assertEquals($user->getFirstName(), 'joe');
+        self::assertEquals($user->getLastName(),  'bloggs');
+        self::assertEquals($user->getUsername(),  'joe bloggs');
     }
 
     /**

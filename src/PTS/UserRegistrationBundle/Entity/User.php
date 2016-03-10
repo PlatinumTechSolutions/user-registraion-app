@@ -142,7 +142,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getUsername()
     {
-        return null;
+        $username = $this->getFullName();
+        if (empty($username)) {
+            $username = 'Unnamed User';
+        }
+        return $username;
     }
 
     /**
@@ -208,6 +212,8 @@ class User implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->email,
             $this->password,
+            $this->first_name,
+            $this->last_name,
         ]);
     }
 
@@ -218,6 +224,8 @@ class User implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->email,
             $this->password,
+            $this->first_name,
+            $this->last_name,
         ) = unserialize($serialized);
     }
 
