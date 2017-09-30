@@ -5,6 +5,7 @@ before_script:
     - cp app/config/parameters.yml.travis app/config/parameters.yml
     - composer install
 script:
+    - stty cols 80
     - bin/phpunit --coverage-clover build/logs/clover.xml
 after_success:
     - bin/coveralls -v
