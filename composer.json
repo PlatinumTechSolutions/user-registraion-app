@@ -4,11 +4,8 @@
     "type": "project",
     "description": "",
     "autoload": {
-        "psr-4": { "": "src/" },
+        "psr-4": { "PTS\\": "src/PTS" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
-    },
-    "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
         "php": ">=5.5.9",
