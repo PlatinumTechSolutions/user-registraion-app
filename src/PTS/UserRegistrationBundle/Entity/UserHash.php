@@ -51,7 +51,7 @@ class UserHash
      */
     public function validate()
     {
-        if (in_array($this->type, $this->allowedTypeList, true) == false) {
+        if (in_array($this->type, $this->allowedTypeList, true) === false) {
             throw new ValidationException("That type is not in the allowed list: " . $this->type);
         }
         return true;
