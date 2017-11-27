@@ -16,8 +16,3 @@
 /bin/
 !bin/console
 !bin/symfony_requirements
-
-# OS noise
-.DS_Store
-*.DS_Store
-*.swp
